@@ -60,4 +60,38 @@ foreach ([$lines, $columns, $diagonals, $reverseDiagonals] as $dataset) {
 
 echo "<strong>XMASes found:</strong> $xmasesFound<br />";
 
-// this shit is never going to work for part 2...
+// Disgusting
+
+$x_masesFound = 0;
+foreach ($lines as $i => $line) {
+    if ($i === 0 || $i === $lineCount - 1) {
+        continue; // An 'A' here can't be in the middle of a X-MAS
+    }
+
+    foreach ($line as $j => $letter) {
+        if ($j === 0 || $j === $lineLength - 1) {
+            continue; // An 'A' here can't be in the middle of a X-MAS
+        }
+        if ($letter !== 'A') {
+            continue;
+        }
+
+        if (
+            // Check diagonally NW->SE
+            (
+                (($lines[$i-1][$j-1] ?? '') === 'M' && ($lines[$i+1][$j+1] ?? '') === 'S')
+                || (($lines[$i-1][$j-1] ?? '') === 'S' && ($lines[$i+1][$j+1] ?? '') === 'M')
+            )
+            &&
+            // Check diagonally SW->NE
+            (
+                (($lines[$i+1][$j-1] ?? '') === 'M' && ($lines[$i-1][$j+1] ?? '') === 'S')
+                || (($lines[$i+1][$j-1] ?? '') === 'S' && ($lines[$i-1][$j+1] ?? '') === 'M')
+            )
+        ) {
+            $x_masesFound++;
+        }
+    }
+}
+
+echo "<strong>X-MASes found:</strong> $x_masesFound<br />";
